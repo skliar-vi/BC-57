@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .close-btn {
+            display: none;
+        }
+
+        .close-btn.visible {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="close-btn" id="close-btn" type="button">Close socket connection</button>
+    <ul id="messages"></ul>
+
+    <script>
+        const closeButton = document.getElementById('close-btn')
+        const messages = document.getElementById('messages')
+        const ws = new WebSocket('ws://localhost:4020')
+
+        const closeWSConnection = () => { ws.close() }
+
+        ws.onopen = () => {
+            closeButton.classList.add('visible')
+            closeButton.addEventListener('click', closeWSConnection)
+        }
+
+        ws.onmessage = (e) => messages.insertAdjacentHTML('beforeend', `<li>${e.data}</li>`)
+
+        ws.close = () => {
+            closeButton.classList.remove('visible')
+            closeButton.removeEventListener('click', closeWSConnection)
+        }
+    </script>
+</body>
+
+</html>

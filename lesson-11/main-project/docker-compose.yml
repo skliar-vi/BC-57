@@ -1,0 +1,37 @@
+version: '3'
+services:
+  node-app:
+    build: . # replace with the name of your Node.js image
+    container_name: your-node-app
+    links:
+      - mongo
+    environment:
+      - PORT=3000
+      - DB_HOST=mongodb://admin:adminpassword@mongo:27017/library?authSource=admin
+    ports:
+      - "3001:3000"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo
+    container_name: lesson-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
+      - MONGO_INITDB_DATABASE=library
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
